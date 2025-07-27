@@ -1,0 +1,53 @@
+
+<h2>LASH3Z Leaderboard (Master Sheet)</h2>
+<div class="controls">
+  <span id="last-refresh">Last refresh: —</span>
+  <button class="btn" onclick="fetchLeaderboardData()">Refresh Now</button>
+</div>
+<table id="leaderboard-table" class="table neon">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Hunts</th>
+      <th>Tournaments</th>
+      <th>Lucky 7</th>
+      <th>Total LASH3ZBux</th>
+    </tr>
+  </thead>
+  <div class="loading-spinner"></div>
+  <tbody id="leaderboard-table-body">
+    <tr><td colspan="5">Loading data...</td></tr>
+  </tbody>
+</table>
+<script>
+async function fetchLeaderboardData() {
+    const url = window.LASH3Z_CONFIG.sheets.leaderboard;
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const rows = text.trim().split('\n').map(r => r.split(','));
+        renderLeaderboard(rows);
+        document.getElementById('last-refresh').textContent = 'Last refresh: ' + new Date().toLocaleTimeString();
+    } catch (error) {
+        console.error('Error fetching Google Sheet:', error);
+    }
+}
+function renderLeaderboard(data) {
+    const table = document.getElementById('leaderboard-table-body');
+    table.innerHTML = '';
+    let rowsData = [];
+    for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (row.length < 5) continue;
+        rowsData.push(row);
+    }
+    rowsData.sort((a, b) => (parseFloat(b[4]) || 0) - (parseFloat(a[4]) || 0));
+    rowsData.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td>`;
+        table.appendChild(tr);
+    });
+}
+setInterval(fetchLeaderboardData, 30000);
+window.onload = fetchLeaderboardData;
+</script>

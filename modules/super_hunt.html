@@ -1,0 +1,41 @@
+
+<h2>Super Hunt</h2>
+<div id="super-hunt-container">Loading data...</div>
+
+<script>
+async function fetchBonusHuntData(type) {
+    const url = 'https://docs.google.com/spreadsheets/d/e/DUMMY_ID_SUPER_HUNT/pub?gid=0&single=true&output=csv'; // replace with correct sheet link
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const rows = text.split('\n').map(r => r.split(','));
+        renderBonusHunt(type, rows);
+    } catch (error) {
+        console.error('Error fetching Bonus Hunt data:', error);
+    }
+}
+function renderBonusHunt(type, data) {
+    const container = document.getElementById(type + '-hunt-container');
+    if (!container) return;
+    let html = '<table border="1" style="width:100%; text-align:center;"><thead><tr><th>Game</th><th>Bet</th><th>Payout</th><th>Multiplier</th></tr></thead><tbody>';
+    for (let i = 1; i < data.length; i++) { // Skip header row
+        const row = data[i];
+        if (row.length < 4) continue;
+        html += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td></tr>`;
+    }
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+window.onload = () => {
+    fetchBonusHuntData('mega');
+    fetchBonusHuntData('super');
+    fetchBonusHuntData('player');
+}
+</script>
+
+
+<script>
+function debugFetch(url) {
+    console.log('[DEBUG FETCH]', url);
+}
+</script>
