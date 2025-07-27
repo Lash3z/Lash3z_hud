@@ -1,0 +1,170 @@
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+#lucky7-scoreboard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#lucky7-scoreboard li {
+  padding: 5px 0;
+  border-bottom: 1px solid #0ff;
+}
+
+.score-up {
+  color: #0f0; /* Green for score increases */
+  animation: flashGreen 1s ease;
+}
+
+.score-down {
+  color: #f00; /* Red for score decreases */
+  animation: flashRed 1s ease;
+}
+
+@keyframes flashGreen {
+  0% { background-color: rgba(0, 255, 0, 0.2); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flashRed {
+  0% { background-color: rgba(255, 0, 0, 0.2); }
+  100% { background-color: transparent; }
+}
+
+.gold-glow {
+  text-shadow: 0 0 10px #ffd700, 0 0 20px #ffea00;
+  font-weight: bold;
+}
+
+.silver-glow {
+  text-shadow: 0 0 10px #c0c0c0, 0 0 20px #e0e0e0;
+  font-weight: bold;
+}
+
+.bronze-glow {
+  text-shadow: 0 0 10px #cd7f32, 0 0 20px #ff9966;
+  font-weight: bold;
+}
+
+.reorder li {
+  transition: transform 0.5s ease;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  0% { transform: translateY(-10px); opacity: 0.8; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.rank-moved {
+  animation: rankSlideGlow 0.8s ease;
+}
+
+@keyframes rankSlideGlow {
+  0% {
+    transform: translateY(-10px);
+    background-color: rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    transform: translateY(5px);
+    background-color: rgba(255, 215, 0, 0.1);
+  }
+  100% {
+    transform: translateY(0);
+    background-color: transparent;
+  }
+}
+
+.score-up {
+  background-color: rgba(0, 255, 0, 0.1);
+  transition: background-color 0.5s ease;
+}
+
+.score-down {
+  background-color: rgba(255, 0, 0, 0.1);
+  transition: background-color 0.5s ease;
+}
+
+.gold-glow {
+  text-shadow: 0 0 10px #ffd700, 0 0 20px #ffea00;
+}
+
+.silver-glow {
+  text-shadow: 0 0 10px #c0c0c0, 0 0 20px #e0e0e0;
+}
+
+.bronze-glow {
+  text-shadow: 0 0 10px #cd7f32, 0 0 20px #ff9966;
+}
+
+#filter-tabs {
+  margin: 20px;
+  text-align: center;
+}
+
+.tab-btn {
+  background: #111;
+  color: #0ff;
+  border: 1px solid #0ff;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.tab-btn.active {
+  background: #0ff;
+  color: #000;
+}
+
+.tab-btn:hover {
+  background: #0cc;
+  color: #fff;
+}
+
+#chart-toggle {
+  margin: 20px 0;
+}
+
+.chart-btn {
+  background: #111;
+  color: #0ff;
+  border: 1px solid #0ff;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.chart-btn.active {
+  background: #0ff;
+  color: #000;
+}
+
+.chart-btn:hover {
+  background: #0cc;
+  color: #fff;
+}
+
+/* Chart Fade Transitions */
+.chart-container {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.chart-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}

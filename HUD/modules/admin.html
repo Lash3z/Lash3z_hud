@@ -1,0 +1,115 @@
+
+<h2>Admin Panel (PIN Protected)</h2>
+<div id="admin-login">
+  <label>Enter PIN: <input type="password" id="admin-pin" /></label>
+  <button onclick="checkPin()">Login</button>
+</div>
+<div id="admin-dashboard" style="display:none;">
+  <h3>Manual LASH3ZBux Add</h3>
+  <form id="manual-bux-form">
+    <label>Username: <input type="text" name="username" required /></label>
+    <label>Amount of Bux: <input type="number" name="bux" required /></label>
+    <button type="button" onclick="addManualBux()">Add Bux</button>
+  </form>
+  <p id="bux-status"></p>
+
+  <h3>Toggle Prediction Forms</h3>
+  <label><input type="checkbox" id="bonus-toggle" checked> Bonus Hunt Predictions</label><br>
+  <label><input type="checkbox" id="tournament-toggle" checked> Tournament Predictions</label><br>
+  <label><input type="checkbox" id="player-toggle" checked> Player Hunt Predictions</label><br>
+
+  <hr>
+  <h3>System Status</h3>
+  <div class="system-status">
+    <p>Current HUD Version: <span id="admin-hud-version">Loading...</span></p>
+    <p>Last Deployment: <span id="admin-deploy-date">Loading...</span></p>
+  </div>
+</div>
+<script>
+const ADMIN_PIN = '2323';
+
+function checkPin() {
+  const enteredPin = document.getElementById('admin-pin').value;
+  if (enteredPin === ADMIN_PIN) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-dashboard').style.display = 'block';
+  } else {
+    alert('Incorrect PIN!');
+  }
+}
+
+async function addManualBux() {
+  const username = document.querySelector('#manual-bux-form [name="username"]').value.trim();
+  const bux = document.querySelector('#manual-bux-form [name="bux"]').value.trim();
+  if (!username || !bux || isNaN(bux)) {
+    alert('Please enter a valid username and bux amount.');
+    return;
+  }
+  document.getElementById('bux-status').textContent = `Added ${bux} LASH3ZBux to ${username} (simulated)`;
+}
+
+fetch('VERSION.txt')
+  .then(response => response.text())
+  .then(text => {
+    const lines = text.split('\n');
+    const version = lines[0].replace('LASH3Z HUD Version: ', '');
+    const buildDate = lines[1].replace('Build Date: ', '');
+    document.getElementById('admin-hud-version').innerText = version;
+    document.getElementById('admin-deploy-date').innerText = buildDate;
+  })
+  .catch(err => console.warn('Failed to load system status', err));
+</script>
+
+
+<hr>
+<h3>Google Sheets Test Mode</h3>
+<div class="sheets-test">
+  <button onclick="mockGoogleSheetsWrite()">Simulate Write</button>
+  <p id="sheets-status">No test performed yet.</p>
+</div>
+<script>
+async function mockGoogleSheetsWrite() {
+  document.getElementById('sheets-status').textContent = 'Testing write to Google Sheets...';
+  setTimeout(() => {
+    document.getElementById('sheets-status').textContent = '✅ Mock write successful! (Simulated)';
+  }, 1500);
+}
+</script>
+
+
+<hr>
+<h3>Google Sheets Live Integration</h3>
+<div class="sheets-live">
+  <button onclick="writeToGoogleSheets()">Write Data</button>
+  <button onclick="readFromGoogleSheets()">Read Data</button>
+  <p id="sheets-live-status">Status: Not connected.</p>
+</div>
+<script>
+const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/REPLACE_WITH_SCRIPT_ID/exec';
+
+async function writeToGoogleSheets() {
+  document.getElementById('sheets-live-status').textContent = 'Writing to Google Sheets...';
+  try {
+    const response = await fetch(GOOGLE_SHEETS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ action: 'write', data: 'SampleData' })
+    });
+    const result = await response.text();
+    document.getElementById('sheets-live-status').textContent = '✅ Write successful: ' + result;
+  } catch (err) {
+    document.getElementById('sheets-live-status').textContent = '❌ Write failed: ' + err.message;
+  }
+}
+
+async function readFromGoogleSheets() {
+  document.getElementById('sheets-live-status').textContent = 'Reading from Google Sheets...';
+  try {
+    const response = await fetch(GOOGLE_SHEETS_API_URL + '?action=read');
+    const result = await response.text();
+    document.getElementById('sheets-live-status').textContent = '✅ Read data: ' + result;
+  } catch (err) {
+    document.getElementById('sheets-live-status').textContent = '❌ Read failed: ' + err.message;
+  }
+}
+</script>

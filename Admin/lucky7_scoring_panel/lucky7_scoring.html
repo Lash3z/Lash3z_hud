@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky 7 Scoring Panel</title>
+  <link rel="stylesheet" href="lucky7_scoring.css">
+</head>
+<body>
+  <div class="scoring-container">
+    <h1>Lucky 7 Scoring Panel</h1>
+    <form id="scoring-form">
+      <label for="single7">Single 7 (+7 pts):</label>
+      <input type="number" id="single7" min="0" step="1" value="0">
+
+      <label for="pair7">Two 7s (Pair) (+21 pts):</label>
+      <input type="number" id="pair7" min="0" step="1" value="0">
+
+      <label for="triple7">Three 7s (+35 pts):</label>
+      <input type="number" id="triple7" min="0" step="1" value="0">
+
+      <label for="bonus">Bonus Modifier (Custom):</label>
+      <input type="number" id="bonus" min="0" step="1" value="0">
+
+      <button type="submit">Calculate & Update</button>
+    </form>
+    <div id="score-result">Current Score: 0</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('scoring-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const single7 = parseInt(document.getElementById('single7').value) * 7;
+      const pair7 = parseInt(document.getElementById('pair7').value) * 21;
+      const triple7 = parseInt(document.getElementById('triple7').value) * 35;
+      const bonus = parseInt(document.getElementById('bonus').value);
+      const totalScore = single7 + pair7 + triple7 + bonus;
+
+      document.getElementById('score-result').innerText = "Current Score: " + totalScore;
+
+      try {
+        const res = await fetch('/api/lucky7', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lucky7Score: totalScore })
+        });
+        const data = await res.json();
+        console.log('Score updated to:', data.score);
+      } catch (err) {
+        console.error('Error updating score:', err);
+      }
+    });
+  </script>
+</body>
+</html>

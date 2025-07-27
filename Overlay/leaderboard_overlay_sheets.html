@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LASH3Z HUD - Google Sheets Leaderboard Overlay</title>
+  <link rel="stylesheet" href="overlay.css" />
+  <style>
+    body { background: transparent; color: #0ff; font-family: Arial, sans-serif; margin: 0; padding: 10px; }
+    .overlay-board { background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; width: 300px; }
+    .overlay-board h2 { text-align: center; font-size: 20px; margin: 0 0 10px; color: #0ff; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 4px; border-bottom: 1px solid #0ff; }
+    tr:nth-child(1) { color: gold; font-weight: bold; }
+    tr:nth-child(2) { color: silver; font-weight: bold; }
+    tr:nth-child(3) { color: #cd7f32; font-weight: bold; }
+    .refresh-time { text-align: center; font-size: 10px; margin-top: 5px; color: #0ff; opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <div class="overlay-board">
+    <h2>Leaderboard</h2>
+    <table id="overlay-leaderboard">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Pts</th>
+        </tr>
+      </thead>
+      <tbody id="overlay-leaderboard-body">
+        <tr><td>Loading...</td><td>-</td></tr>
+      </tbody>
+    </table>
+    <div class="refresh-time">Last update: <span id="last-update">-</span></div>
+  </div>
+  <script>
+    const REFRESH_INTERVAL = 10000; // 10 seconds
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/REPLACE_WITH_SCRIPT_ID/exec?action=readLeaderboard';
+
+    async function fetchLeaderboardData() {
+      try {
+        console.log('Fetching leaderboard data...');
+        const response = await fetch(GOOGLE_SHEET_URL);
+        const data = await response.json();
+        updateLeaderboard(data);
+      } catch (error) {
+        console.error("Error fetching Google Sheets data:", error);
+      }
+    }
+
+    function updateLeaderboard(data) {
+      const tbody = document.getElementById('overlay-leaderboard-body');
+      tbody.innerHTML = '';
+      data.forEach(player => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${player.username}</td><td>${player.points}</td>`;
+        tbody.appendChild(row);
+      });
+      document.getElementById('last-update').innerText = new Date().toLocaleTimeString();
+    }
+
+    setInterval(fetchLeaderboardData, REFRESH_INTERVAL);
+    fetchLeaderboardData(); // initial load
+  </script>
+</body>
+</html>
